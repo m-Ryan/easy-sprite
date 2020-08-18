@@ -1,0 +1,12 @@
+{
+  "name": "easy-sprite.js",
+  "version": "1.0.4",
+  "description": "canvas library",
+  "main": "dist/index.js",
+  "repository": "git@github.com:m-Ryan/easy-sprite.git",
+  "author": "m-ryan",
+  "license": "MIT",
+  "scripts": {
+    "build": "tsc"
+  }
+}
