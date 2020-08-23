@@ -35,9 +35,10 @@ export class Event extends LifeCycle {
     if (!this.eventMap[type]) {
       throw new Error('不支持该事件类型');
     }
-    this.eventMap[type] = this.eventMap[type]!.filter(
-      (item) => item !== handler
+    const index = this.eventMap[type].findIndex(
+      (item) => item === handler
     );
+    this.eventMap[type].splice(index, 1);
   }
 
   public stopPropagation() {

@@ -18,6 +18,7 @@ export class Stage extends Sprite {
     }
   ) {
     super();
+    GlobalState.setRoot(this);
     GlobalState.setCanvas(canvas);
     const { width, height } = options;
     this.width = width;
@@ -28,22 +29,12 @@ export class Stage extends Sprite {
 
     // resize
     this.resize();
+
     // 事件监听
     this.initEventListener();
 
     // 绘图
     this.run();
-  }
-
-  _draw() {
-    if (!this.showFPS) return;
-
-    this.Graphics.clear();
-    this.Graphics.font = '30px serif';
-
-    this.Graphics.fillText(`FPS:${getFPS()}`, this.width - 200, 100);
-    this.Graphics.fill();
-
   }
 
   _update(time: number) {

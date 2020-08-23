@@ -1,6 +1,5 @@
 import { Stage } from './Stage';
 import { Event } from '../event/Event';
-import { isSprite } from '../utils/isStage';
 import { Graphics } from './Graphics';
 import { GlobalState } from '../state/GlobalState';
 type TransformOrigin = 'left' | 'right' | 'center' | 'top' | 'bottom';
@@ -9,7 +8,7 @@ export class Sprite extends Event {
   private _zIndex: number = 0;
   private _degree: number = 0;
   public parent: Sprite | null = null;
-  public children: Sprite[] = [];
+  private _children: Sprite[] = [];
   public touchEnabled = true;
   public x: number = 0;
   public y: number = 0;
@@ -20,37 +19,37 @@ export class Sprite extends Event {
     'center',
   ];
 
-  protected path = new Path2D();
+  private path = new Path2D();
+  private pathString: string = '';
   protected Graphics: Graphics = new Graphics(this);
 
   addChild(sprite: Sprite) {
-    this.children.push(sprite);
-    this.children = this.children.sort((a, b) => a.zIndex - b.zIndex);
+    this._children.push(sprite);
+    this._children.sort((a, b) => a.zIndex - b.zIndex);
     sprite.parent = this;
   }
 
   removeChild(sprite: Sprite) {
     sprite.parent = null;
-    this.children = this.children.filter((child) => child === sprite);
+    const index = this._children.findIndex((child) => child === sprite);
+    this._children.splice(index, 1);
   }
 
   removeAll() {
-    this.children = [];
+    this._children = [];
   }
 
   _update(time: number) {
     this.onBeforeUpdate();
     const ctx = GlobalState.ctx;
 
-    // this
-    this.path = new Path2D();
-    this.path.rect(this._x, this._y, this.width, this.height);
-
     ctx.save();
-    ctx.translate(this._translateX, this._translateY);
-    ctx.rotate(this._rotation);
-    ctx.translate(-this._translateX, -this._translateY);
+    if (this._rotation !== 0) {
+      ctx.translate(this._translateX, this._translateY);
+      ctx.rotate(this._rotation);
+      ctx.translate(-this._translateX, -this._translateY);
 
+    }
     // Graphics
     this._draw();
     this.Graphics.print();
@@ -71,7 +70,7 @@ export class Sprite extends Event {
       if (child === this) {
         return true;
       }
-      if (isSprite(child)) {
+      if (child) {
         child = child.parent;
       } else {
         child = null;
@@ -81,6 +80,7 @@ export class Sprite extends Event {
   }
 
   isHitPoint(x: number, y: number): boolean {
+    this.resetPath2D();
     return (
       GlobalState.ctx.isPointInPath(this.path, x, y) ||
       this.Graphics.isHitPoint(x, y) ||
@@ -139,6 +139,10 @@ export class Sprite extends Event {
     return this._zIndex;
   }
 
+  get children() {
+    return this._children;
+  }
+
   get root(): Sprite | null {
     return this.parent ? this.parent.root : this.parent;
   }
@@ -146,9 +150,17 @@ export class Sprite extends Event {
   set zIndex(zIndex: number) {
     this._zIndex = zIndex;
     if (this.parent) {
-      this.parent.children = this.parent.children.sort(
+      this.parent._children = this.parent.children.sort(
         (a, b) => a.zIndex - b.zIndex
       );
+    }
+  }
+
+  private resetPath2D() {
+    const pathString = [this._x, this._y, this.width, this.height].toString();
+    if (this.pathString !== pathString) {
+      this.path = new Path2D();
+      this.path.rect(this._x, this._y, this.width, this.height);
     }
   }
 }

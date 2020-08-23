@@ -1,12 +1,16 @@
 {
   "compilerOptions": {
     "module": "commonjs",
-    "lib": ["es7", "dom"],
+    "lib": [
+      "es7",
+      "dom"
+    ],
     "strictNullChecks": true,
     "resolveJsonModule": true,
     "esModuleInterop": true,
     "noImplicitAny": true,
     "suppressImplicitAnyIndexErrors": true,
+    "declaration": true,
     "moduleResolution": "node",
     "removeComments": true,
     "noLib": false,
@@ -17,7 +21,11 @@
     "target": "ES2015",
     "sourceMap": true,
     "outDir": "./dist",
-    "baseUrl": "."
+    "baseUrl": ".",
   },
-  "exclude": ["node_modules", "**/*.spec.ts"]
+  "exclude": [
+    "node_modules",
+    "**/*.spec.ts",
+    "example"
+  ]
 }

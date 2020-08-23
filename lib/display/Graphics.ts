@@ -348,9 +348,9 @@ export class Graphics {
     });
   }
 
-  set textBaseline(value: CanvasRenderingContext2D['textAlign']) {
+  set textBaseline(value: CanvasRenderingContext2D['textBaseline']) {
     this.stack.push({
-      type: 'textAlign',
+      type: 'textBaseline',
       params: value,
     });
   }

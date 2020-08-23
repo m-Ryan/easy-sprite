@@ -1,6 +1,6 @@
 import { Shape } from "../display/Shape";
 
-export class Cicle extends Shape {
+export class Circle extends Shape {
   public radius: number = 0;
   constructor(x: number = 0, y: number = 0, radius: number) {
     super();
